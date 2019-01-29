@@ -7,10 +7,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("spring/riddle")
@@ -35,7 +32,7 @@ public class RiddleController {
                 .toJson();
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "/verify")
+    @RequestMapping(method = RequestMethod.GET, value = "/verify")
     public String verifyAnswer(@RequestParam("answer") String answer){
         String rightAnswer="景";
         if(answer.equals(rightAnswer)){
