@@ -2,6 +2,8 @@ package com.mirror.miniprogram.anagrams.domain;
 
 public class RiddleDTO extends BaseSerial{
 
+    private Long id;
+
     private String question;
 
     private String hint;
@@ -40,5 +42,13 @@ public class RiddleDTO extends BaseSerial{
 
     public void setExplanation(String explanation) {
         this.explanation = explanation;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

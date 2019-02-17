@@ -2,15 +2,20 @@ package com.mirror.miniprogram.anagrams.controller;
 
 import com.mirror.miniprogram.anagrams.common.json.JsonViewFactory;
 import com.mirror.miniprogram.anagrams.domain.RiddleDTO;
+import com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo;
+import com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper;
+import com.mirror.miniprogram.anagrams.service.impl.RiddleService;
+import com.mirror.miniprogram.anagrams.service.impl.RiddleUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("spring/riddle")
+@RequestMapping("dingjing/spring/riddle")
 @RestController
 @Api(tags = "汉谜相关 Api")
 @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful — 请求已完成，服务器成功返回网页"),
@@ -19,13 +24,22 @@ import org.springframework.web.bind.annotation.*;
         @ApiResponse(code = 500, message = "服务器遇到错误，无法完成请求"), @ApiResponse(code = 503, message = "服务器目前无法使用（由于超载或停机维护）")})
 public class RiddleController {
 
+    @Autowired
+    RiddleService riddleService;
+
+    @Autowired
+    RiddleUserService riddleUserService;
+
     @RequestMapping(method = RequestMethod.GET, value = "/single")
-    public String singleRiddle() throws Exception {
+    public String singleRiddle(@RequestParam("openid") String openid) throws Exception {
+        RiddleBaseInfo riddleBaseInfo=riddleService.getSingleRiddle(openid);
+        riddleUserService.fetchRiddleSync(openid);
         RiddleDTO riddleDTO=new RiddleDTO();
-        riddleDTO.setQuestion("日出北京城");
-        riddleDTO.setHint("（打一字）");
-        riddleDTO.setAnswer("景");
-        riddleDTO.setExplanation("上北下南，日在京的上方，即为景");
+        riddleDTO.setId(riddleBaseInfo.getId());
+        riddleDTO.setQuestion(riddleBaseInfo.getRiddleQuestion());
+        riddleDTO.setAnswer(riddleBaseInfo.getRiddleAnswer());
+        riddleDTO.setHint(riddleBaseInfo.getRiddleHint());
+        riddleDTO.setExplanation(riddleBaseInfo.getRiddleExplanation());
         return JsonViewFactory.create()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .put("data", riddleDTO)
@@ -33,14 +47,22 @@ public class RiddleController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/verify")
-    public String verifyAnswer(@RequestParam("answer") String answer){
-        String rightAnswer="景";
+    public String verifyAnswer(@RequestParam("answer") String answer,
+                               @RequestParam("riddleId") Long riddleId,@RequestParam("openid") String openid){
+        RiddleBaseInfo riddleBaseInfo=riddleService.getById(riddleId);
+        //TODO 异常前端如何同步处理
+        if(riddleBaseInfo==null){
+            return JsonViewFactory.create().fail("该条谜语不存在，可能已被删除，请重新进入").toJson();
+        }
+        String rightAnswer=riddleBaseInfo.getRiddleAnswer();
         if(answer.equals(rightAnswer)){
+            riddleUserService.verifyRiddleSync(riddleBaseInfo,openid,true);
             return JsonViewFactory.create()
                     .setDateFormat("yyyy-MM-dd HH:mm:ss")
                     .put("data", true)
                     .toJson();
         }
+        riddleUserService.verifyRiddleSync(riddleBaseInfo,openid,false);
         return JsonViewFactory.create()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .put("data", false)

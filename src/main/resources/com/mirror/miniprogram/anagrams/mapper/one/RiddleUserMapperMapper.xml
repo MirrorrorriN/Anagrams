@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mirror.miniprogram.anagrams.mapper.one.RiddleUserMapperMapper">
+  <resultMap id="BaseResultMap" type="com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="riddle_id" jdbcType="BIGINT" property="riddleId" />
+    <result column="user_openid" jdbcType="VARCHAR" property="userOpenid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, riddle_id, user_openid
+  </sql>
+
+  <select id="selectLatestRiddle" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from riddle_user_mapper
+    where user_openid = #{openid,jdbcType=VARCHAR}
+    order by id desc limit 1
+  </select>
+
+  <select id="selectCountByUserOpenid" parameterType="java.lang.String" resultType="java.lang.Long">
+    select
+    count(1)
+    from riddle_user_mapper
+    where user_openid = #{openid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from riddle_user_mapper
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from riddle_user_mapper
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper">
+    insert into riddle_user_mapper (id, riddle_id, user_openid
+      )
+    values (#{id,jdbcType=BIGINT}, #{riddleId,jdbcType=BIGINT}, #{userOpenid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper">
+    insert into riddle_user_mapper
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="riddleId != null">
+        riddle_id,
+      </if>
+      <if test="userOpenid != null">
+        user_openid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="riddleId != null">
+        #{riddleId,jdbcType=BIGINT},
+      </if>
+      <if test="userOpenid != null">
+        #{userOpenid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper">
+    update riddle_user_mapper
+    <set>
+      <if test="riddleId != null">
+        riddle_id = #{riddleId,jdbcType=BIGINT},
+      </if>
+      <if test="userOpenid != null">
+        user_openid = #{userOpenid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper">
+    update riddle_user_mapper
+    set riddle_id = #{riddleId,jdbcType=BIGINT},
+      user_openid = #{userOpenid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

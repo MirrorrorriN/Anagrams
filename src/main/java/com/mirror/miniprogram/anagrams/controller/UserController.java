@@ -4,6 +4,7 @@ import com.mirror.miniprogram.anagrams.common.json.JsonViewFactory;
 import com.mirror.miniprogram.anagrams.domain.RiddleDTO;
 import com.mirror.miniprogram.anagrams.service.http.Response.WxOpenIdResponse;
 import com.mirror.miniprogram.anagrams.service.http.WxLoginService;
+import com.mirror.miniprogram.anagrams.service.impl.RiddleUserMapperService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
-@RequestMapping("spring/user")
+@RequestMapping("dingjing/spring/user")
 @RestController
 @Api(tags = "主页 Api")
 @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful — 请求已完成，服务器成功返回网页"),
@@ -27,6 +28,8 @@ public class UserController {
 
     @Autowired
     WxLoginService wxLoginService;
+    @Autowired
+    RiddleUserMapperService riddleUserMapperService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/getOpenId")
     public String getOpenId(String code) throws Exception {
@@ -42,10 +45,10 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/correctCount")
     public String singleRiddle(@RequestParam("openid") String openid) throws Exception {
-
+        long correctCount=riddleUserMapperService.countCorectViaOpenid(openid);
         return JsonViewFactory.create()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .put("data", 10)
+                .put("data", correctCount)
                 .toJson();
     }
 

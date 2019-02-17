@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mirror.miniprogram.anagrams.mapper.one.RiddleUserMapper">
+  <resultMap id="BaseResultMap" type="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
+    <result column="correct_count" jdbcType="BIGINT" property="correctCount" />
+    <result column="incorrect_count" jdbcType="BIGINT" property="incorrectCount" />
+    <result column="query_count" jdbcType="BIGINT" property="queryCount" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, openid, correct_count, incorrect_count, query_count
+  </sql>
+
+  <select id="selectByOpenid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from riddle_user
+    where openid = #{openid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from riddle_user
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from riddle_user
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
+    insert into riddle_user (id, openid, correct_count, 
+      incorrect_count, query_count)
+    values (#{id,jdbcType=BIGINT}, #{openid,jdbcType=VARCHAR}, #{correctCount,jdbcType=BIGINT}, 
+      #{incorrectCount,jdbcType=BIGINT}, #{queryCount,jdbcType=BIGINT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
+    insert into riddle_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="openid != null">
+        openid,
+      </if>
+      <if test="correctCount != null">
+        correct_count,
+      </if>
+      <if test="incorrectCount != null">
+        incorrect_count,
+      </if>
+      <if test="queryCount != null">
+        query_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="correctCount != null">
+        #{correctCount,jdbcType=BIGINT},
+      </if>
+      <if test="incorrectCount != null">
+        #{incorrectCount,jdbcType=BIGINT},
+      </if>
+      <if test="queryCount != null">
+        #{queryCount,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
+    update riddle_user
+    <set>
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="correctCount != null">
+        correct_count = #{correctCount,jdbcType=BIGINT},
+      </if>
+      <if test="incorrectCount != null">
+        incorrect_count = #{incorrectCount,jdbcType=BIGINT},
+      </if>
+      <if test="queryCount != null">
+        query_count = #{queryCount,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
+    update riddle_user
+    set openid = #{openid,jdbcType=VARCHAR},
+      correct_count = #{correctCount,jdbcType=BIGINT},
+      incorrect_count = #{incorrectCount,jdbcType=BIGINT},
+      query_count = #{queryCount,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

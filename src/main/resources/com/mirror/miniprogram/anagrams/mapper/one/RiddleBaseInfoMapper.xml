@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mirror.miniprogram.anagrams.mapper.one.RiddleBaseInfoMapper">
+  <resultMap id="BaseResultMap" type="com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="riddle_question" jdbcType="VARCHAR" property="riddleQuestion" />
+    <result column="riddle_hint" jdbcType="VARCHAR" property="riddleHint" />
+    <result column="riddle_answer" jdbcType="VARCHAR" property="riddleAnswer" />
+    <result column="riddle_explanation" jdbcType="VARCHAR" property="riddleExplanation" />
+    <result column="solved_count" jdbcType="BIGINT" property="solvedCount" />
+    <result column="riddle_type" jdbcType="INTEGER" property="riddleType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, riddle_question, riddle_hint, riddle_answer, riddle_explanation, solved_count, 
+    riddle_type
+  </sql>
+
+  <select id="selectRiddleAfterId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from riddle_base_info
+    where id &gt; #{latestRiddleId,jdbcType=BIGINT}
+    order by id asc limit 1
+  </select>
+  <select id="selectCountAll" resultType="java.lang.Long">
+    select
+    count(1)
+    from riddle_base_info
+  </select>
+  <select id="selectAll" resultType="java.lang.Long">
+    select
+    id
+    from riddle_base_info
+  </select>
+  <select id="selectUnfinishedWithOpenid" parameterType="java.lang.String" resultType="java.lang.Long">
+    select
+    rbi.id
+    from riddle_base_info rbi
+    left join riddle_user_mapper rum
+    on rbi.id=rum.riddle_id
+    where rum.user_openid=#{openid,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from riddle_base_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from riddle_base_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo">
+    insert into riddle_base_info (id, riddle_question, riddle_hint, 
+      riddle_answer, riddle_explanation, solved_count, 
+      riddle_type)
+    values (#{id,jdbcType=BIGINT}, #{riddleQuestion,jdbcType=VARCHAR}, #{riddleHint,jdbcType=VARCHAR}, 
+      #{riddleAnswer,jdbcType=VARCHAR}, #{riddleExplanation,jdbcType=VARCHAR}, #{solvedCount,jdbcType=BIGINT}, 
+      #{riddleType,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo">
+    insert into riddle_base_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="riddleQuestion != null">
+        riddle_question,
+      </if>
+      <if test="riddleHint != null">
+        riddle_hint,
+      </if>
+      <if test="riddleAnswer != null">
+        riddle_answer,
+      </if>
+      <if test="riddleExplanation != null">
+        riddle_explanation,
+      </if>
+      <if test="solvedCount != null">
+        solved_count,
+      </if>
+      <if test="riddleType != null">
+        riddle_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="riddleQuestion != null">
+        #{riddleQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="riddleHint != null">
+        #{riddleHint,jdbcType=VARCHAR},
+      </if>
+      <if test="riddleAnswer != null">
+        #{riddleAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="riddleExplanation != null">
+        #{riddleExplanation,jdbcType=VARCHAR},
+      </if>
+      <if test="solvedCount != null">
+        #{solvedCount,jdbcType=BIGINT},
+      </if>
+      <if test="riddleType != null">
+        #{riddleType,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo">
+    update riddle_base_info
+    <set>
+      <if test="riddleQuestion != null">
+        riddle_question = #{riddleQuestion,jdbcType=VARCHAR},
+      </if>
+      <if test="riddleHint != null">
+        riddle_hint = #{riddleHint,jdbcType=VARCHAR},
+      </if>
+      <if test="riddleAnswer != null">
+        riddle_answer = #{riddleAnswer,jdbcType=VARCHAR},
+      </if>
+      <if test="riddleExplanation != null">
+        riddle_explanation = #{riddleExplanation,jdbcType=VARCHAR},
+      </if>
+      <if test="solvedCount != null">
+        solved_count = #{solvedCount,jdbcType=BIGINT},
+      </if>
+      <if test="riddleType != null">
+        riddle_type = #{riddleType,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo">
+    update riddle_base_info
+    set riddle_question = #{riddleQuestion,jdbcType=VARCHAR},
+      riddle_hint = #{riddleHint,jdbcType=VARCHAR},
+      riddle_answer = #{riddleAnswer,jdbcType=VARCHAR},
+      riddle_explanation = #{riddleExplanation,jdbcType=VARCHAR},
+      solved_count = #{solvedCount,jdbcType=BIGINT},
+      riddle_type = #{riddleType,jdbcType=INTEGER}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
