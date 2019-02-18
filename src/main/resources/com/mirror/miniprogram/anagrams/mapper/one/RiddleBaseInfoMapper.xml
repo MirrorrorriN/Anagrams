@@ -7,12 +7,17 @@
     <result column="riddle_hint" jdbcType="VARCHAR" property="riddleHint" />
     <result column="riddle_answer" jdbcType="VARCHAR" property="riddleAnswer" />
     <result column="riddle_explanation" jdbcType="VARCHAR" property="riddleExplanation" />
-    <result column="solved_count" jdbcType="BIGINT" property="solvedCount" />
+    <result column="solved_count" jdbcType="INTEGER" property="solvedCount" />
+    <result column="tried_count" jdbcType="INTEGER" property="triedCount" />
+    <result column="query_count" jdbcType="INTEGER" property="queryCount" />
+    <result column="answer_count" jdbcType="INTEGER" property="answerCount" />
     <result column="riddle_type" jdbcType="INTEGER" property="riddleType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, riddle_question, riddle_hint, riddle_answer, riddle_explanation, solved_count, 
-    riddle_type
+    id, riddle_question, riddle_hint, riddle_answer, riddle_explanation, solved_count,
+    tried_count, query_count, answer_count, riddle_type, create_time, update_time
   </sql>
 
   <select id="selectRiddleAfterId" parameterType="java.lang.Long" resultMap="BaseResultMap">
@@ -42,7 +47,7 @@
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from riddle_base_info
     where id = #{id,jdbcType=BIGINT}
@@ -52,12 +57,16 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo">
-    insert into riddle_base_info (id, riddle_question, riddle_hint, 
-      riddle_answer, riddle_explanation, solved_count, 
-      riddle_type)
-    values (#{id,jdbcType=BIGINT}, #{riddleQuestion,jdbcType=VARCHAR}, #{riddleHint,jdbcType=VARCHAR}, 
-      #{riddleAnswer,jdbcType=VARCHAR}, #{riddleExplanation,jdbcType=VARCHAR}, #{solvedCount,jdbcType=BIGINT}, 
-      #{riddleType,jdbcType=INTEGER})
+    insert into riddle_base_info (id, riddle_question, riddle_hint,
+      riddle_answer, riddle_explanation, solved_count,
+      tried_count, query_count, answer_count,
+      riddle_type, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{riddleQuestion,jdbcType=VARCHAR}, #{riddleHint,jdbcType=VARCHAR},
+      #{riddleAnswer,jdbcType=VARCHAR}, #{riddleExplanation,jdbcType=VARCHAR}, #{solvedCount,jdbcType=INTEGER},
+      #{triedCount,jdbcType=INTEGER}, #{queryCount,jdbcType=INTEGER}, #{answerCount,jdbcType=INTEGER},
+      #{riddleType,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo">
     insert into riddle_base_info
@@ -80,8 +89,23 @@
       <if test="solvedCount != null">
         solved_count,
       </if>
+      <if test="triedCount != null">
+        tried_count,
+      </if>
+      <if test="queryCount != null">
+        query_count,
+      </if>
+      <if test="answerCount != null">
+        answer_count,
+      </if>
       <if test="riddleType != null">
         riddle_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -101,10 +125,25 @@
         #{riddleExplanation,jdbcType=VARCHAR},
       </if>
       <if test="solvedCount != null">
-        #{solvedCount,jdbcType=BIGINT},
+        #{solvedCount,jdbcType=INTEGER},
+      </if>
+      <if test="triedCount != null">
+        #{triedCount,jdbcType=INTEGER},
+      </if>
+      <if test="queryCount != null">
+        #{queryCount,jdbcType=INTEGER},
+      </if>
+      <if test="answerCount != null">
+        #{answerCount,jdbcType=INTEGER},
       </if>
       <if test="riddleType != null">
         #{riddleType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -124,10 +163,25 @@
         riddle_explanation = #{riddleExplanation,jdbcType=VARCHAR},
       </if>
       <if test="solvedCount != null">
-        solved_count = #{solvedCount,jdbcType=BIGINT},
+        solved_count = #{solvedCount,jdbcType=INTEGER},
+      </if>
+      <if test="triedCount != null">
+        tried_count = #{triedCount,jdbcType=INTEGER},
+      </if>
+      <if test="queryCount != null">
+        query_count = #{queryCount,jdbcType=INTEGER},
+      </if>
+      <if test="answerCount != null">
+        answer_count = #{answerCount,jdbcType=INTEGER},
       </if>
       <if test="riddleType != null">
         riddle_type = #{riddleType,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -138,8 +192,13 @@
       riddle_hint = #{riddleHint,jdbcType=VARCHAR},
       riddle_answer = #{riddleAnswer,jdbcType=VARCHAR},
       riddle_explanation = #{riddleExplanation,jdbcType=VARCHAR},
-      solved_count = #{solvedCount,jdbcType=BIGINT},
-      riddle_type = #{riddleType,jdbcType=INTEGER}
+      solved_count = #{solvedCount,jdbcType=INTEGER},
+      tried_count = #{triedCount,jdbcType=INTEGER},
+      query_count = #{queryCount,jdbcType=INTEGER},
+      answer_count = #{answerCount,jdbcType=INTEGER},
+      riddle_type = #{riddleType,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

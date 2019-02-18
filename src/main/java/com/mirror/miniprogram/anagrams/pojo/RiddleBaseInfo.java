@@ -1,5 +1,7 @@
 package com.mirror.miniprogram.anagrams.pojo;
 
+import java.util.Date;
+
 public class RiddleBaseInfo {
     private Long id;
 
@@ -11,9 +13,19 @@ public class RiddleBaseInfo {
 
     private String riddleExplanation;
 
-    private Long solvedCount;
+    private Integer solvedCount;
+
+    private Integer triedCount;
+
+    private Integer queryCount;
+
+    private Integer answerCount;
 
     private Integer riddleType;
+
+    private Date createTime;
+
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -55,12 +67,36 @@ public class RiddleBaseInfo {
         this.riddleExplanation = riddleExplanation == null ? null : riddleExplanation.trim();
     }
 
-    public Long getSolvedCount() {
+    public Integer getSolvedCount() {
         return solvedCount;
     }
 
-    public void setSolvedCount(Long solvedCount) {
+    public void setSolvedCount(Integer solvedCount) {
         this.solvedCount = solvedCount;
+    }
+
+    public Integer getTriedCount() {
+        return triedCount;
+    }
+
+    public void setTriedCount(Integer triedCount) {
+        this.triedCount = triedCount;
+    }
+
+    public Integer getQueryCount() {
+        return queryCount;
+    }
+
+    public void setQueryCount(Integer queryCount) {
+        this.queryCount = queryCount;
+    }
+
+    public Integer getAnswerCount() {
+        return answerCount;
+    }
+
+    public void setAnswerCount(Integer answerCount) {
+        this.answerCount = answerCount;
     }
 
     public Integer getRiddleType() {
@@ -69,5 +105,21 @@ public class RiddleBaseInfo {
 
     public void setRiddleType(Integer riddleType) {
         this.riddleType = riddleType;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

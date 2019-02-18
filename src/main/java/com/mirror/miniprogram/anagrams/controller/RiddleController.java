@@ -3,6 +3,7 @@ package com.mirror.miniprogram.anagrams.controller;
 import com.mirror.miniprogram.anagrams.common.json.JsonViewFactory;
 import com.mirror.miniprogram.anagrams.domain.RiddleDTO;
 import com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo;
+import com.mirror.miniprogram.anagrams.pojo.RiddleUser;
 import com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper;
 import com.mirror.miniprogram.anagrams.service.impl.RiddleService;
 import com.mirror.miniprogram.anagrams.service.impl.RiddleUserService;
@@ -32,9 +33,9 @@ public class RiddleController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/single")
     public String singleRiddle(@RequestParam("openid") String openid) throws Exception {
-        RiddleBaseInfo riddleBaseInfo=riddleService.getSingleRiddle(openid);
-        riddleUserService.fetchRiddleSync(openid);
-        RiddleDTO riddleDTO=new RiddleDTO();
+        RiddleBaseInfo riddleBaseInfo = riddleService.getSingleRiddle(openid);
+        riddleUserService.fetchRiddleSync(riddleBaseInfo, openid);
+        RiddleDTO riddleDTO = new RiddleDTO();
         riddleDTO.setId(riddleBaseInfo.getId());
         riddleDTO.setQuestion(riddleBaseInfo.getRiddleQuestion());
         riddleDTO.setAnswer(riddleBaseInfo.getRiddleAnswer());
@@ -48,24 +49,49 @@ public class RiddleController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/verify")
     public String verifyAnswer(@RequestParam("answer") String answer,
-                               @RequestParam("riddleId") Long riddleId,@RequestParam("openid") String openid){
-        RiddleBaseInfo riddleBaseInfo=riddleService.getById(riddleId);
+                               @RequestParam("riddleId") Long riddleId, @RequestParam("openid") String openid) {
+        RiddleBaseInfo riddleBaseInfo = riddleService.getById(riddleId);
         //TODO 异常前端如何同步处理
-        if(riddleBaseInfo==null){
+        if (riddleBaseInfo == null) {
             return JsonViewFactory.create().fail("该条谜语不存在，可能已被删除，请重新进入").toJson();
         }
-        String rightAnswer=riddleBaseInfo.getRiddleAnswer();
-        if(answer.equals(rightAnswer)){
-            riddleUserService.verifyRiddleSync(riddleBaseInfo,openid,true);
+        String rightAnswer = riddleBaseInfo.getRiddleAnswer();
+        if (answer.equals(rightAnswer)) {
+            riddleUserService.verifyRiddleSync(riddleBaseInfo, openid, true);
             return JsonViewFactory.create()
                     .setDateFormat("yyyy-MM-dd HH:mm:ss")
                     .put("data", true)
                     .toJson();
         }
-        riddleUserService.verifyRiddleSync(riddleBaseInfo,openid,false);
+        riddleUserService.verifyRiddleSync(riddleBaseInfo, openid, false);
         return JsonViewFactory.create()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
                 .put("data", false)
+                .toJson();
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/queryAnswer")
+    public String queryAnswer(@RequestParam("riddleId") Long riddleId, @RequestParam("openid") String openid) throws Exception {
+
+        RiddleBaseInfo riddleBaseInfo = riddleService.getById(riddleId);
+        if (riddleBaseInfo == null) {
+            return JsonViewFactory.create().fail("该谜语不存在 \r\n 请刷新").toJson();
+        }
+
+        RiddleUser riddleUser = riddleUserService.getByOpenid(openid);
+        if (riddleUser == null) {
+            return JsonViewFactory.create().fail("用户不存在  \r\n 请退出重新登录").toJson();
+        }
+        if (riddleUser.getScore() < 10) {
+            return JsonViewFactory.create().fail("积分不够用啦 \r\n 继续加油哦").toJson();
+        }
+        riddleUserService.queryAnswerSync(riddleBaseInfo, riddleUser);
+        RiddleDTO riddleDTO = new RiddleDTO();
+        riddleDTO.setAnswer(riddleBaseInfo.getRiddleAnswer());
+        riddleDTO.setExplanation(riddleBaseInfo.getRiddleExplanation());
+        return JsonViewFactory.create()
+                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+                .put("data", riddleDTO)
                 .toJson();
     }
 

@@ -18,7 +18,7 @@
     order by id desc limit 1
   </select>
 
-  <select id="selectCountByUserOpenid" parameterType="java.lang.String" resultType="java.lang.Long">
+  <select id="selectCountByUserOpenid" parameterType="java.lang.String" resultType="java.lang.Integer">
     select
     count(1)
     from riddle_user_mapper

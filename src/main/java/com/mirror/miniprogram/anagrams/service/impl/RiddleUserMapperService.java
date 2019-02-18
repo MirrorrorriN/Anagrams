@@ -11,8 +11,8 @@ public class RiddleUserMapperService {
     @Autowired
     RiddleUserMapperMapper riddleUserMapperMapper;
 
-    public long countCorectViaOpenid(String openid){
-        long count=riddleUserMapperMapper.selectCountByUserOpenid(openid);
+    public int countCorectViaOpenid(String openid){
+        int count=riddleUserMapperMapper.selectCountByUserOpenid(openid);
         return count;
     }
 }

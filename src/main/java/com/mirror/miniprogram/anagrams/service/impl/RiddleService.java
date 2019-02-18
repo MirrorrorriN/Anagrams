@@ -3,6 +3,7 @@ package com.mirror.miniprogram.anagrams.service.impl;
 import com.mirror.miniprogram.anagrams.mapper.one.RiddleBaseInfoMapper;
 import com.mirror.miniprogram.anagrams.mapper.one.RiddleUserMapperMapper;
 import com.mirror.miniprogram.anagrams.pojo.RiddleBaseInfo;
+import com.mirror.miniprogram.anagrams.pojo.RiddleUser;
 import com.mirror.miniprogram.anagrams.pojo.RiddleUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,11 @@ public class RiddleService {
     @Autowired
     RiddleUserMapperMapper riddleUserMapperMapper;
 
-    //TODO 随机待优化
+    public RiddleBaseInfo getById(Long id){
+        return riddleBaseInfoMapper.selectByPrimaryKey(id);
+    }
+
+    //TODO 随机待优化 select语句抽取
     @Transactional
     public RiddleBaseInfo getSingleRiddle(String openid){
         long total=riddleBaseInfoMapper.selectCountAll();
@@ -45,7 +50,4 @@ public class RiddleService {
         return riddleBaseInfo;
     }
 
-    public RiddleBaseInfo getById(Long id){
-        return riddleBaseInfoMapper.selectByPrimaryKey(id);
-    }
 }

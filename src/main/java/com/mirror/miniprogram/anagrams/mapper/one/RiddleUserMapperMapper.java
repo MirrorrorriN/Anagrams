@@ -16,7 +16,7 @@ public interface RiddleUserMapperMapper {
 
     int updateByPrimaryKey(RiddleUserMapper record);
 
-    long selectCountByUserOpenid(@Param("openid") String openid);
+    int selectCountByUserOpenid(@Param("openid") String openid);
 
     RiddleUserMapper selectLatestRiddle(@Param("openid") String openid);
 }

@@ -4,12 +4,17 @@
   <resultMap id="BaseResultMap" type="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="openid" jdbcType="VARCHAR" property="openid" />
-    <result column="correct_count" jdbcType="BIGINT" property="correctCount" />
-    <result column="incorrect_count" jdbcType="BIGINT" property="incorrectCount" />
-    <result column="query_count" jdbcType="BIGINT" property="queryCount" />
+    <result column="correct_count" jdbcType="INTEGER" property="correctCount" />
+    <result column="incorrect_count" jdbcType="INTEGER" property="incorrectCount" />
+    <result column="query_count" jdbcType="INTEGER" property="queryCount" />
+    <result column="answer_count" jdbcType="INTEGER" property="answerCount" />
+    <result column="score" jdbcType="INTEGER" property="score" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, openid, correct_count, incorrect_count, query_count
+    id, openid, correct_count, incorrect_count, query_count, answer_count, score, create_time,
+    update_time
   </sql>
 
   <select id="selectByOpenid" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -20,7 +25,7 @@
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from riddle_user
     where id = #{id,jdbcType=BIGINT}
@@ -31,9 +36,13 @@
   </delete>
   <insert id="insert" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
     insert into riddle_user (id, openid, correct_count, 
-      incorrect_count, query_count)
-    values (#{id,jdbcType=BIGINT}, #{openid,jdbcType=VARCHAR}, #{correctCount,jdbcType=BIGINT}, 
-      #{incorrectCount,jdbcType=BIGINT}, #{queryCount,jdbcType=BIGINT})
+      incorrect_count, query_count, answer_count,
+      score, create_time, update_time
+      )
+    values (#{id,jdbcType=BIGINT}, #{openid,jdbcType=VARCHAR}, #{correctCount,jdbcType=INTEGER},
+      #{incorrectCount,jdbcType=INTEGER}, #{queryCount,jdbcType=INTEGER}, #{answerCount,jdbcType=INTEGER},
+      #{score,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
     insert into riddle_user
@@ -53,6 +62,18 @@
       <if test="queryCount != null">
         query_count,
       </if>
+      <if test="answerCount != null">
+        answer_count,
+      </if>
+      <if test="score != null">
+        score,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -62,13 +83,25 @@
         #{openid,jdbcType=VARCHAR},
       </if>
       <if test="correctCount != null">
-        #{correctCount,jdbcType=BIGINT},
+        #{correctCount,jdbcType=INTEGER},
       </if>
       <if test="incorrectCount != null">
-        #{incorrectCount,jdbcType=BIGINT},
+        #{incorrectCount,jdbcType=INTEGER},
       </if>
       <if test="queryCount != null">
-        #{queryCount,jdbcType=BIGINT},
+        #{queryCount,jdbcType=INTEGER},
+      </if>
+      <if test="answerCount != null">
+        #{answerCount,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </trim>
   </insert>
@@ -79,13 +112,25 @@
         openid = #{openid,jdbcType=VARCHAR},
       </if>
       <if test="correctCount != null">
-        correct_count = #{correctCount,jdbcType=BIGINT},
+        correct_count = #{correctCount,jdbcType=INTEGER},
       </if>
       <if test="incorrectCount != null">
-        incorrect_count = #{incorrectCount,jdbcType=BIGINT},
+        incorrect_count = #{incorrectCount,jdbcType=INTEGER},
       </if>
       <if test="queryCount != null">
-        query_count = #{queryCount,jdbcType=BIGINT},
+        query_count = #{queryCount,jdbcType=INTEGER},
+      </if>
+      <if test="answerCount != null">
+        answer_count = #{answerCount,jdbcType=INTEGER},
+      </if>
+      <if test="score != null">
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
       </if>
     </set>
     where id = #{id,jdbcType=BIGINT}
@@ -93,9 +138,13 @@
   <update id="updateByPrimaryKey" parameterType="com.mirror.miniprogram.anagrams.pojo.RiddleUser">
     update riddle_user
     set openid = #{openid,jdbcType=VARCHAR},
-      correct_count = #{correctCount,jdbcType=BIGINT},
-      incorrect_count = #{incorrectCount,jdbcType=BIGINT},
-      query_count = #{queryCount,jdbcType=BIGINT}
+      correct_count = #{correctCount,jdbcType=INTEGER},
+      incorrect_count = #{incorrectCount,jdbcType=INTEGER},
+      query_count = #{queryCount,jdbcType=INTEGER},
+      answer_count = #{answerCount,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 </mapper>

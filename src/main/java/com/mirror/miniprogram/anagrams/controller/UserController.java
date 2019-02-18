@@ -2,9 +2,12 @@ package com.mirror.miniprogram.anagrams.controller;
 
 import com.mirror.miniprogram.anagrams.common.json.JsonViewFactory;
 import com.mirror.miniprogram.anagrams.domain.RiddleDTO;
+import com.mirror.miniprogram.anagrams.domain.UserDTO;
+import com.mirror.miniprogram.anagrams.pojo.RiddleUser;
 import com.mirror.miniprogram.anagrams.service.http.Response.WxOpenIdResponse;
 import com.mirror.miniprogram.anagrams.service.http.WxLoginService;
 import com.mirror.miniprogram.anagrams.service.impl.RiddleUserMapperService;
+import com.mirror.miniprogram.anagrams.service.impl.RiddleUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -30,6 +33,8 @@ public class UserController {
     WxLoginService wxLoginService;
     @Autowired
     RiddleUserMapperService riddleUserMapperService;
+    @Autowired
+    RiddleUserService riddleUserService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/getOpenId")
     public String getOpenId(String code) throws Exception {
@@ -45,10 +50,15 @@ public class UserController {
 
     @RequestMapping(method = RequestMethod.GET, value = "/correctCount")
     public String singleRiddle(@RequestParam("openid") String openid) throws Exception {
-        long correctCount=riddleUserMapperService.countCorectViaOpenid(openid);
+        UserDTO userDTO = new UserDTO();
+
+        RiddleUser riddleUser = riddleUserService.getByOpenid(openid);
+        userDTO.setCount(riddleUser.getCorrectCount());
+        userDTO.setScore(riddleUser.getScore());
+
         return JsonViewFactory.create()
                 .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .put("data", correctCount)
+                .put("data", userDTO)
                 .toJson();
     }
 
