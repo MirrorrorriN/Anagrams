@@ -56,7 +56,7 @@ public class RiddleController {
             return JsonViewFactory.create().fail("该条谜语不存在，可能已被删除，请重新进入").toJson();
         }
         String rightAnswer = riddleBaseInfo.getRiddleAnswer();
-        if (answer.equals(rightAnswer)) {
+        if (answer.trim().equals(rightAnswer)) {
             riddleUserService.verifyRiddleSync(riddleBaseInfo, openid, true);
             return JsonViewFactory.create()
                     .setDateFormat("yyyy-MM-dd HH:mm:ss")
