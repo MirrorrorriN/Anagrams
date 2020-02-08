@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
-@RequestMapping("dingjing/spring/user")
+@RequestMapping("anagrams/spring/user")
 @RestController
 @Api(tags = "主页 Api")
 @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful — 请求已完成，服务器成功返回网页"),
