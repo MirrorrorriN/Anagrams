@@ -16,7 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("dingjing/spring/riddle")
+@RequestMapping("anagrams/spring/riddle")
 @RestController
 @Api(tags = "汉谜相关 Api")
 @ApiResponses(value = {@ApiResponse(code = 200, message = "Successful — 请求已完成，服务器成功返回网页"),
